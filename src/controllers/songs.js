@@ -1,18 +1,20 @@
 const e = require('express');
 
-const { Album, Artist } = require('../models');
+const { Album, Song, Artist } = require('../models');
 
 exports.create = (req, res) => {
-    Artist.findByPk(req.params.id)
-    .then(artist => {
-        if(artist) {
-            Album.create({
+    Album.findByPk(req.params.id)
+    .then(album => {
+        if(album) {
+            console.log('if statement')
+            Song.create({
                 ...req.body,
-                artistId: req.params.id
-            }).then(album => {
-                res.status(201).json(album)});
+                albumId: Number(req.params.id),
+                artistId: req.body.artist
+            }).then(song => res.status(201).json(song));
         } else {
-            res.status(404).json({ error: 'The artist could not be found.'})
+            console.log('else statement')
+            res.status(404).json({ error: 'The album could not be found.'})
         }
     })
 };
